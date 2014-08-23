@@ -6,17 +6,15 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import ml.derek.novae.components.CameraFocus;
-import ml.derek.novae.components.GravityComponent;
-import ml.derek.novae.components.GravitySensor;
-import ml.derek.novae.components.PhysicsComponent;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import ml.derek.novae.components.*;
 import ml.derek.novae.systems.GravitySystem;
+import ml.derek.novae.systems.InputSystem;
 import ml.derek.novae.systems.PhysicsSystem;
 
 public class Core extends ApplicationAdapter
 {
 	private Engine engine;
-
 	private Entity player;
 	
 	@Override
@@ -29,21 +27,14 @@ public class Core extends ApplicationAdapter
 
 		Entity sun = new Entity();
 		{
-			sun.add(new PhysicsComponent(new Vector2(), sunSize, true));
-			sun.add(new GravityComponent(null, false));
+			sun.add(new PhysicsComponent(new Vector2(), sunSize, 1000000f, true, BodyDef.BodyType.DynamicBody));
+			sun.add(new GravityComponent(null, false, true));
 			engine.addEntity(sun);
 		}
 
-		float distance = sunSize + minDistance + MathUtils.random(minDistance);
+		float distance = sunSize + minDistance + MathUtils.random(minDistance + 4);
 
-		Entity player = new Entity();
-		{
-			player.add(new PhysicsComponent(new Vector2(sunSize + 1, 0), 5f, 0.1f, true, true));
-			player.add(new GravitySensor(10f));
-			player.add(new GravityComponent(true));
-			player.add(new CameraFocus(1));
-			engine.addEntity(player);
-		}
+
 
 		for(float i = 5; i > 0; i--)
 		{
@@ -51,9 +42,21 @@ public class Core extends ApplicationAdapter
 			distance += minDistance + (size * 2f) + MathUtils.random(minDistance + 7);
 
 			Entity planet = new Entity();
-			planet.add(new PhysicsComponent(new Vector2(distance, 0), size, true));
+			planet.add(new PhysicsComponent(new Vector2(distance, 0), size, 1000000f, false, BodyDef.BodyType.DynamicBody));
 			planet.add(new GravityComponent(sun, 1));
 			engine.addEntity(planet);
+
+			if(i == 1)
+			{
+				Entity player = new Entity();
+				player.add(new PhysicsComponent(new Vector2(distance + 5, 0), 5f, 0.1f, true, BodyDef.BodyType.DynamicBody));
+				player.add(new GravitySensor(20f));
+				player.add(new GravityComponent(planet, false, true));
+				player.add(new CameraFocus(1));
+				player.add(new InputComponent(5000f, 100000000000f));
+				engine.addEntity(player);
+			}
+
 
 
 		}
@@ -91,6 +94,7 @@ public class Core extends ApplicationAdapter
 
 		}
 
+		engine.addSystem(new InputSystem());
 		engine.addSystem(new PhysicsSystem());
 		engine.addSystem(new GravitySystem());
 

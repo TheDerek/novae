@@ -21,7 +21,7 @@ public class GravitySystem extends EntitySystem
 	private ComponentMapper<PhysicsComponent> pm = ComponentMapper.getFor(PhysicsComponent.class);
 	private ComponentMapper<GravityComponent> gm = ComponentMapper.getFor(GravityComponent.class);
 
-	private final float gCon = 400f;
+	private final float gCon = 0.0004f;
 
 	public GravitySystem()
 	{
@@ -87,7 +87,7 @@ public class GravitySystem extends EntitySystem
 			Body body = physics.body;
 
 			//Head towards parent
-			if(gravity.parent != null)
+			if(gravity.parent != null && !gravity.escaping)
 			{
 				Entity parent = gravity.parent;
 				PhysicsComponent parentPhysics = pm.get(parent);

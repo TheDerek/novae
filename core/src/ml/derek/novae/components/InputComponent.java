@@ -12,9 +12,11 @@ import com.badlogic.gdx.math.Vector2;
  */
 public class InputComponent extends Component
 {
-
-
-
-
-
+	public float speed;
+	public float jump;
+	public InputComponent(float speed, float jump)
+	{
+		this.speed = speed;
+		this.jump = jump;
+	}
 }

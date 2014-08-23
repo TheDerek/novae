@@ -17,74 +17,42 @@ public class PhysicsComponent extends Component
 	public Fixture baseFixture;
 
 	public float radius;
-	private Vector2 pos;
-	private boolean dynamic;
-	private float density = 1.2f;
-	private boolean rotate = false;
+	public Vector2 pos;
+	public float density = 1.2f;
+	public boolean rotate = false;
+	public BodyDef.BodyType bodyType;
 	
-	private Type type;
+	public Type type;
 
-	public PhysicsComponent(Vector2 pos, float radius, boolean dynamic)
+	public boolean canJump = true;
+
+	public boolean lockedIn = false; //TODO: REFACTOR THIS MONSTROSITY
+
+	public PhysicsComponent(Vector2 pos, float radius, BodyDef.BodyType bodyType)
 	{
 		this.pos = pos;
 		this.radius = radius;
-		this.dynamic = dynamic;
+		this.bodyType = bodyType;
 		this.type = Type.CIRCLE;
 
 	}
 
-	public PhysicsComponent(Vector2 pos, float radius, float density, boolean dynamic)
+	public PhysicsComponent(Vector2 pos, float radius, float density, BodyDef.BodyType bodyType)
 	{
-		this(pos, radius, dynamic);
+		this(pos, radius, bodyType);
 		this.density = density;
 	}
 
-	public PhysicsComponent(Vector2 pos, float radius, float density, boolean rotate, boolean dynamic)
+	public PhysicsComponent(Vector2 pos, float radius, float density, boolean rotate, BodyDef.BodyType bodyType)
 	{
-		this(pos, radius, dynamic);
+		this(pos, radius, bodyType);
 		this.density = density;
 		this.rotate = rotate;
 	}
 
-	public void create(World world)
-	{
-		BodyDef bodyDef = new BodyDef();
-		bodyDef.type = dynamic ? BodyDef.BodyType.DynamicBody : BodyDef.BodyType.StaticBody;
-		bodyDef.fixedRotation = rotate; //TODO: Look into this
-		bodyDef.position.set(pos);
 
-		body = world.createBody(bodyDef);
 
-		FixtureDef fixtureDef = new FixtureDef();
-		Shape shape = null;
-
-		switch (type)
-		{
-			case CIRCLE:
-				shape = new CircleShape();
-				shape.setRadius(radius);
-				break;
-
-			case RECT:
-				
-				break;
-
-		}
-
-		if(shape == null)
-			throw new NullPointerException("No type of shape has been assigned");
-
-		fixtureDef.shape = shape;
-		fixtureDef.density = density; //Earth density more or less
-		fixtureDef.friction = 0.4f;
-		//fixtureDef.restitution = 0.6f;
-
-		baseFixture = body.createFixture(fixtureDef);
-
-		shape.dispose();
-	}
-
-	private enum Type
+	public enum Type
 	{
 		RECT,
 		CIRCLE
