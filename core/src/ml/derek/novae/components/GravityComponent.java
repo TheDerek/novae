@@ -15,13 +15,20 @@ public class GravityComponent extends Component
 	public boolean orbit;
 	public int direction = 1;
 	public boolean dynamic = false;
-
 	public boolean escaping = false;
+
+	public Entity defaultParent;
 
 	public GravityComponent(Entity parent, boolean orbit)
 	{
 		this(parent, 1);
 		this.orbit = orbit;
+	}
+
+	public GravityComponent addDefParent(Entity e)
+	{
+		this.defaultParent = e;
+		return this;
 	}
 
 	public GravityComponent(Entity parent, boolean orbit, boolean dynamic)

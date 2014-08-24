@@ -16,6 +16,8 @@ public class PhysicsComponent extends Component
 	public BodyDef bodyDef;
 	public Fixture baseFixture;
 
+	public boolean sensor = false;
+
 	public float radius;
 	public Vector2 pos;
 	public float density = 1.2f;
@@ -28,12 +30,17 @@ public class PhysicsComponent extends Component
 
 	public boolean lockedIn = false; //TODO: REFACTOR THIS MONSTROSITY
 
+	public float width;
+	public float height;
+
 	public PhysicsComponent(Vector2 pos, float radius, BodyDef.BodyType bodyType)
 	{
 		this.pos = pos;
 		this.radius = radius;
 		this.bodyType = bodyType;
 		this.type = Type.CIRCLE;
+		width = radius * 2f;
+		height = radius * 2f;
 
 	}
 
@@ -48,6 +55,14 @@ public class PhysicsComponent extends Component
 		this(pos, radius, bodyType);
 		this.density = density;
 		this.rotate = rotate;
+	}
+
+	public PhysicsComponent(Vector2 pos, float radius, float density, boolean rotate, boolean sensor, BodyDef.BodyType bodyType)
+	{
+		this(pos, radius, bodyType);
+		this.density = density;
+		this.rotate = rotate;
+		this.sensor = sensor;
 	}
 
 

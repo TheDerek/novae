@@ -39,7 +39,7 @@ public class PhysicsSystem extends EntitySystem implements ContactListener
 		world.setContactListener(this);
 		debugRenderer = new Box2DDebugRenderer();
 
-		float scale = 10f;
+		float scale = 11f;
 
 		camera = new OrthographicCamera(64 * scale, 48 * scale);
 
@@ -80,7 +80,7 @@ public class PhysicsSystem extends EntitySystem implements ContactListener
 			Entity entity = entities.get(i);
 			PhysicsComponent physics = pm.get(entity);
 			//Gdx.app.log("loop", physics.body.getPosition().toString());
-			if(false)
+			//if(false)
 			if(Family.getFor(CameraFocus.class).matches(entity))
 			{
 				camera.position.x = physics.body.getPosition().x;
@@ -89,12 +89,12 @@ public class PhysicsSystem extends EntitySystem implements ContactListener
 
 		}
 
-		camera.update();
+		//camera.update();
 		world.step(1 / 60f, 6, 2);
 
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		debugRenderer.render(world, camera.combined); //TODO: Better rendering solution
+		//Gdx.gl.glClearColor(0, 0, 0, 1);
+		//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//debugRenderer.render(world, camera.combined); //TODO: Better rendering solution
 	}
 
 	public Fixture createCircle(Vector2 localpos, float raduis, boolean sensor, Body body)
@@ -161,6 +161,8 @@ public class PhysicsSystem extends EntitySystem implements ContactListener
 				Gdx.app.log("ingame", "new parent");
 				gravity2.parent = entites[0];
 			}
+
+
 
 		}
 
@@ -247,6 +249,7 @@ public class PhysicsSystem extends EntitySystem implements ContactListener
 			throw new NullPointerException("No type of shape has been assigned");
 
 		fixtureDef.shape = shape;
+		fixtureDef.isSensor = p.sensor;
 		fixtureDef.density = p.density; //Earth density more or less
 		fixtureDef.friction = 0.4f;
 		//fixtureDef.restitution = 0.6f;

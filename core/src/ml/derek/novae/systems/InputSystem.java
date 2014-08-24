@@ -64,6 +64,7 @@ public class InputSystem extends IteratingSystem
 				body.applyForceToCenter(direction.scl(input.jump), true);
 				physics.canJump = false;
 
+
 				PhysicsComponent parentPhysics = pm.get(gravity.parent);
 				if(parentPhysics.lockedIn)
 				{
@@ -71,8 +72,11 @@ public class InputSystem extends IteratingSystem
 					GravityComponent parentGravity = gm.get(gravity.parent);
 
 					parentBody.getFixtureList().get(0).setSensor(true);
+					parentBody.applyForceToCenter(parentBody.getLinearVelocity().scl(100000000000f), true);
 					parentGravity.escaping = true;
 				}
+
+				gravity.parent = null;
 			}
 		}
 
@@ -83,7 +87,7 @@ public class InputSystem extends IteratingSystem
 			if(physics.canJump && !parentPhysics.lockedIn)
 			{
 				Gdx.app.log("ingame", "Locked In");
-				physics.lockedIn = true;
+				parentPhysics.lockedIn = true;
 				physics.canJump = false;
 			}
 
